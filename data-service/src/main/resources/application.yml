@@ -1,0 +1,49 @@
+server:
+  port: ${DATA_SERVICE_PORT:8090}
+
+spring:
+  profiles:
+    active: ${SPRING_PROFILE:dev}
+  kafka:
+    bootstrap:
+      servers: ${KAFKA_BOOTSTRAP_SERVERS:pkc-xmzwx.europe-central2.gcp.confluent.cloud:9092}
+    security:
+      protocol: ${KAFKA_SECURITY_PROTOCOL:SASL_SSL}
+    sasl:
+      jaas:
+        config: ${KAFKA_SASL_JAAS_CONFIG:org.apache.kafka.common.security.plain.PlainLoginModule required username="7FVY3HRGJCBZUNK2" password="/x38MoYO2bdykrJGPgcCihWfoMqm4V64icBLcPZzYHCVqGvC4BfDWEp5rG1f1C9v";}
+      mechanism: ${KAFKA_SASL_MECHANISM:PLAIN}
+    ssl:
+      endpoint:
+        identification:
+          algorithm: ${KAFKA_SSL_ENDPOINT_IDENTIFICATION_ALGORITHM:https}
+    allow:
+      auto:
+        create:
+          topics: ${KAFKA_ALLOW_AUTO_CREATE_TOPICS:false}
+    auto:
+      offset:
+        reset: ${KAFKA_AUTO_OFFSET_RESET:earliest}
+  datasource:
+    username: ${POSTGRES_USER:admin}
+    password: ${POSTGRES_PASSWORD:admin}
+    url: jdbc:postgresql://${DB_CONTAINER_NAME:localhost}:${DB_CONTAINER_PORT:5432}/${POSTGRES_DB:meta}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      javax:
+        persistence:
+          validation:
+            mode: none
+
+telegram:
+  service:
+    server: ${TELEGRAM_SERVICE_SERVER:http://localhost:8090}
+    triggers-endpoint: ${TELEGRAM_SERVICE_TRIGGERS_ENDPOINT:/triggers}
+
+springdoc:
+  api-docs:
+    path: /openapi/docs
+  swagger-ui:
+    path: /openapi/swagger

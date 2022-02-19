@@ -1,0 +1,6 @@
+.idea
+
+./data-service/target
+
+**/target
+*.iml
