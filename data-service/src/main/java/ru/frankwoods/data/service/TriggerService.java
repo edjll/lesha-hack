@@ -6,12 +6,15 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.server.ResponseStatusException;
 import ru.frankwoods.data.config.constants.TelegramServiceConstants;
 import ru.frankwoods.data.entity.Candle;
 import ru.frankwoods.data.entity.Trigger;
+import ru.frankwoods.data.entity.User;
 import ru.frankwoods.data.model.RegisterTriggerRequest;
 import ru.frankwoods.data.model.TriggerResponse;
 import ru.frankwoods.data.repository.TriggerRepository;
@@ -29,6 +32,7 @@ public class TriggerService {
     private DataService dataService;
     private final TriggerRepository repository;
     private final RestTemplate restTemplate;
+    private final UserService userService;
 
     @Value(TelegramServiceConstants.VALUE_TELEGRAM_SERVICE_SERVER)
     private String telegramServiceServer;
@@ -36,6 +40,7 @@ public class TriggerService {
     @Value(TelegramServiceConstants.VALUE_TELEGRAM_SERVICE_TRIGGERS_ENDPOINT)
     private String telegramServiceTriggersEndpoint;
 
+    @Transactional
     public void register(RegisterTriggerRequest registerTriggerRequest) {
         Trigger trigger = new Trigger();
         trigger.setFigi(registerTriggerRequest.getFigi());

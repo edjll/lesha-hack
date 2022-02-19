@@ -4,6 +4,7 @@ import lombok.*;
 import ru.frankwoods.data.entity.Candle;
 import ru.frankwoods.data.entity.Figi;
 import ru.frankwoods.data.entity.Trigger;
+import ru.frankwoods.data.entity.User;
 
 import java.math.BigDecimal;
 
@@ -13,14 +14,14 @@ import java.math.BigDecimal;
 @Setter
 public class TriggerResponse {
 
-    private Long userId;
+    private User user;
 
     private Figi figi;
 
     private BigDecimal price;
 
     public TriggerResponse(Trigger trigger, Candle candle) {
-        this.userId = trigger.getUserId();
+        this.user = trigger.getUser();
         this.figi = trigger.getFigi();
         this.price = candle.getDetails().getClose();
     }

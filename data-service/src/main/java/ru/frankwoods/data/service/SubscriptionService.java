@@ -16,6 +16,8 @@ import ru.frankwoods.data.config.constants.TelegramServiceConstants;
 import ru.frankwoods.data.entity.Candle;
 import ru.frankwoods.data.entity.Figi;
 import ru.frankwoods.data.entity.Subscription;
+import ru.frankwoods.data.entity.User;
+import ru.frankwoods.data.model.SubscriptionResponse;
 import ru.frankwoods.data.repository.SubscriptionRepository;
 
 import javax.annotation.PostConstruct;
@@ -33,6 +35,7 @@ public class SubscriptionService {
     private final Map<Long, ScheduledFuture<?>> subscriptions = new HashMap<>();
     private final ThreadPoolTaskScheduler taskScheduler;
     private final RestTemplate restTemplate;
+    private final UserService userService;
 
     @Autowired
     @Lazy
@@ -72,7 +75,12 @@ public class SubscriptionService {
     }
 
     public void sendMessage(Subscription subscription) {
-        HttpEntity<Candle> httpEntity = new HttpEntity<>(dataService.getCandleByFigi(subscription.getFigi()));
+        Candle candle = dataService.getCandleByFigi(subscription.getFigi());
+        User user = userService.getUserById(subscription.getUserId())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST));
+
+        SubscriptionResponse subscriptionResponse = new SubscriptionResponse(user, candle);
+        HttpEntity<SubscriptionResponse> httpEntity = new HttpEntity<>(subscriptionResponse);
         restTemplate.exchange(telegramServiceServer + subscription.getAction().getUrl(), subscription.getAction().getMethod(), httpEntity, Object.class);
     }
 
