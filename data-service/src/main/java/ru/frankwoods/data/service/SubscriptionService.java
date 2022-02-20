@@ -62,9 +62,8 @@ public class SubscriptionService {
         if (figi == null) {
             subscriptionsIds.addAll(repository.getAllByUserId(userId));
         } else {
-            Long subscriptionId = repository.getIdByUserIdAndFigi(userId, figi)
-                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST));
-            subscriptionsIds.add(subscriptionId);
+            repository.getIdByUserIdAndFigi(userId, figi)
+                    .ifPresent(subscriptionsIds::add);
         }
 
         subscriptionsIds.forEach(subscriptionId -> {
